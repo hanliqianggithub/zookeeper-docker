@@ -12,7 +12,6 @@ fi
 if [[ ! -f "$ZOO_CONF_DIR/zoo.cfg" ]]; then
     CONFIG="$ZOO_CONF_DIR/zoo.cfg"
 
-    echo "clientPort=$ZOO_PORT" >> "$CONFIG"
     echo "dataDir=$ZOO_DATA_DIR" >> "$CONFIG"
     echo "dataLogDir=$ZOO_DATA_LOG_DIR" >> "$CONFIG"
 
@@ -21,6 +20,11 @@ if [[ ! -f "$ZOO_CONF_DIR/zoo.cfg" ]]; then
     echo "syncLimit=$ZOO_SYNC_LIMIT" >> "$CONFIG"
 
     echo "maxClientCnxns=$ZOO_MAX_CLIENT_CNXNS" >> "$CONFIG"
+    echo "standaloneEnabled=$ZOO_STANDALONE_ENABLED" >> "$CONFIG"
+
+    if [[ -z $ZOO_SERVERS ]]; then
+      ZOO_SERVERS="server.1=localhost:2888:3888;$ZOO_PORT"
+    fi
 
     for server in $ZOO_SERVERS; do
         echo "$server" >> "$CONFIG"
